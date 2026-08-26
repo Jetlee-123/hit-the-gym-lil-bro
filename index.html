@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hit The Gym Lil Bro AI Calorie and Exercise Coach</title>
+<title>Hit The Gym Lil Bro — AI Calorie & Exercise Coach</title>
 <style>
-:root{--bg:#0b0d12;--card:#151821;--card2:#1b1f2a;--border:#262b38;--accent:#22c55e;--accent2:#38bdf8;--accent3:#a78bfa;--accent4:#f472b6;--text:#f1f5f9;--muted:#8b94a7;--danger:#f87171;}
+:root{--bg:#0b0d12;--card:#151821;--card2:#1b1f2a;--border:#262b38;--accent:#22c55e;--accent2:#38bdf8;--accent3:#a78bfa;--accent4:#f472b6;--text:#f1f5f9;--muted:#8b94a7;--danger:#f87171;--radius:16px;--shadow:0 8px 28px rgba(0,0,0,.35);}
+[data-theme="light"]{--bg:#f4f6fb;--card:#ffffff;--card2:#f0f2f8;--border:#e3e7f0;--text:#1a1d29;--muted:#6b7280;--shadow:0 6px 20px rgba(20,20,40,.08);}
 *{box-sizing:border-box;}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .app{max-width:780px;margin:0 auto;padding:16px 16px 60px;}
@@ -13,14 +14,15 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Hel
 .brand{display:flex;align-items:center;gap:10px;}
 .brand .logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:19px;}
 .brand h1{font-size:1rem;margin:0;font-weight:800;line-height:1.15;}
+.brand h1 .sub{display:block;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;}
 .topbar-actions{display:flex;gap:8px;align-items:center;}
-.icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--card2);cursor:pointer;font-size:16px;color:var(--text);}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--card2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text);}
 .streak-badge{display:flex;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:8px 12px;font-size:.8rem;font-weight:700;color:var(--accent);}
 .profile-pill{display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:7px 12px;font-size:.78rem;font-weight:700;color:var(--accent3);cursor:pointer;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;}
-.btn{padding:12px 20px;border-radius:10px;border:none;background:var(--accent);color:#08110b;font-weight:700;cursor:pointer;width:100%;margin-top:12px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:18px;}
+.btn{padding:13px 26px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#08110b;font-weight:700;cursor:pointer;width:100%;margin-top:18px;}
+.btn.secondary{background:var(--card2);color:var(--text);border:1.5px solid var(--border);width:auto;margin-top:0;}
 .btn.small{width:auto;padding:6px 10px;font-size:.72rem;margin-top:0;}
-.btn.secondary{background:var(--card2);color:var(--text);border:1.5px solid var(--border);}
 .tabs{display:flex;gap:6px;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:5px;margin-bottom:18px;overflow-x:auto;}
 .tab{flex:1;text-align:center;padding:9px 8px;border-radius:9px;cursor:pointer;font-size:.76rem;font-weight:600;color:var(--muted);white-space:nowrap;}
 .tab.active{background:var(--card);color:var(--text);}
@@ -32,6 +34,25 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Hel
 .lb-admin-controls{display:flex;gap:6px;flex-wrap:wrap;padding-top:6px;margin-top:6px;border-top:1px solid var(--border);}
 .empty-state{text-align:center;color:var(--muted);font-size:.82rem;padding:16px 0;}
 .errbox{background:#3a1414;border:1px solid #7f1d1d;color:#fca5a5;border-radius:10px;padding:12px 14px;font-size:.85rem;}
+.field label{display:block;font-size:.76rem;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;}
+input,select{width:100%;padding:11px 13px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:.95rem;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;}
+.results{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px;}
+.stat{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px 10px;text-align:center;}
+.stat .num{font-size:1.4rem;font-weight:800;color:var(--accent);}
+.stat .lab{font-size:.7rem;color:var(--muted);margin-top:4px;}
+.chat-window{display:flex;flex-direction:column;gap:12px;max-height:400px;overflow-y:auto;padding:4px 2px 10px;margin-bottom:14px;}
+.msg{max-width:85%;padding:11px 14px;border-radius:14px;font-size:.89rem;line-height:1.5;}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#08110b;}
+.msg.bot{align-self:flex-start;background:var(--card2);border:1px solid var(--border);color:var(--text);}
+.chat-input-row{display:flex;gap:8px;}
+.chat-input-row input{flex:1;}
+.water-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px;}
+.glass{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;}
+.glass.filled{background:var(--accent2);border-color:var(--accent2);}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:200;}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:320px;width:90%;}
+footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:30px;}
 </style>
 </head>
 <body data-theme="dark">
@@ -56,48 +77,57 @@ window.fbGetLeaderboard=async function(){ await window.fbReady; const snap=await
 window.fbGetConfig=async function(){ await window.fbReady; const ref=doc(fbDb,'config','shared'); const snap=await getDoc(ref); return snap.exists()?snap.data():null; };
 window.fbSetConfig=async function(provider,key){ await window.fbReady; const ref=doc(fbDb,'config','shared'); await setDoc(ref,{provider:provider,key:key,updatedAt:Date.now()}); };
 window.fbDeletePlayer=async function(id){ await window.fbReady; const ref=doc(fbDb,'players',id); await deleteDoc(ref); };
-window.fbAdjustPlayerXP=async function(id, delta){
-  await window.fbReady;
-  const ref=doc(fbDb,'players',id);
-  const snap=await getDoc(ref);
-  if(!snap.exists()) throw new Error('Player not found');
-  const playerDoc=snap.data();
-  const dataBlob=playerDoc.data||{};
-  const xpKey=Object.keys(dataBlob).find(function(k){ return k.endsWith('__xp'); });
-  if(!xpKey) throw new Error('No XP record found for this player yet.');
-  const current=+dataBlob[xpKey]||0;
-  const updated=Math.max(0, current+delta);
-  dataBlob[xpKey]=String(updated);
-  await setDoc(ref,{data:dataBlob,updatedAt:Date.now(),adminActionAt:Date.now()},{merge:true});
-  return updated;
-};
-window.fbFullResetPlayer=async function(id){
-  await window.fbReady;
-  const ref=doc(fbDb,'players',id);
-  const snap=await getDoc(ref);
-  if(!snap.exists()) throw new Error('Player not found');
-  await setDoc(ref,{data:{},adminActionAt:Date.now()},{merge:true});
-};
+window.fbAdjustPlayerXP=async function(id, delta){ await window.fbReady; const ref=doc(fbDb,'players',id); const snap=await getDoc(ref); if(!snap.exists()) throw new Error('Player not found'); const playerDoc=snap.data(); const dataBlob=playerDoc.data||{}; const xpKey=Object.keys(dataBlob).find(function(k){ return k.endsWith('__xp'); }); if(!xpKey) throw new Error('No XP record found for this player yet.'); const current=+dataBlob[xpKey]||0; const updated=Math.max(0, current+delta); dataBlob[xpKey]=String(updated); await setDoc(ref,{data:dataBlob,updatedAt:Date.now(),adminActionAt:Date.now()},{merge:true}); return updated; };
+window.fbFullResetPlayer=async function(id){ await window.fbReady; const ref=doc(fbDb,'players',id); const snap=await getDoc(ref); if(!snap.exists()) throw new Error('Player not found'); await setDoc(ref,{data:{},adminActionAt:Date.now()},{merge:true}); };
 </script>
 <div class="app">
 <div class="topbar">
-<div class="brand"><div class="logo">GYM</div><h1>Hit The Gym Lil Bro</h1></div>
-<div class="topbar-actions"><div class="profile-pill" id="profilePill" onclick="openProfileSwitcher()">Player 1</div><div class="streak-badge" id="streakBadge">0</div><button class="icon-btn" id="syncNowBtn" onclick="forceSyncNow()" title="Sync now">Sync</button></div>
+<div class="brand"><div class="logo">💪</div><h1>Hit The Gym<br><span class="sub">Lil Bro · AI Coach</span></h1></div>
+<div class="topbar-actions"><div class="profile-pill" id="profilePill" onclick="openProfileSwitcher()">👤 Player 1</div><div class="streak-badge" id="streakBadge">🔥 0</div><button class="icon-btn" id="syncNowBtn" onclick="forceSyncNow()">🔄</button><button class="icon-btn" id="themeBtn" onclick="toggleTheme()">🌙</button></div>
 </div>
+<div class="card"><h2>Level <span id="levelBadgeNum">1</span></h2><p id="xpText">0 / 100 XP</p></div>
 <div class="tabs">
-<div class="tab active" data-tab="profile" onclick="showTab('profile')">Profile</div>
-<div class="tab" data-tab="leaderboard" onclick="showTab('leaderboard')">Leaderboard</div>
+<div class="tab active" data-tab="profile" onclick="showTab('profile')">👤 Profile</div>
+<div class="tab" data-tab="coach" onclick="showTab('coach')">🤖 Coach</div>
+<div class="tab" data-tab="log" onclick="showTab('log')">📒 Log</div>
+<div class="tab" data-tab="progress" onclick="showTab('progress')">📈 Progress</div>
+<div class="tab" data-tab="leaderboard" onclick="showTab('leaderboard')">🏆 Leaderboard</div>
 </div>
 <div class="panel active" id="panel-profile">
-<div class="card"><h2>Level <span id="levelBadgeNum">1</span></h2><p id="xpText">0 / 100 XP</p></div>
-<div class="card"><button class="btn" onclick="addXP(10,'test')">Log Activity (+10 XP demo)</button></div>
+<div class="card"><h2>Tell us about you</h2><div class="grid">
+<div class="field"><label>Weight (kg)</label><input type="number" id="weight" value="75"></div>
+<div class="field"><label>Height (cm)</label><input type="number" id="height" value="178"></div>
+<div class="field"><label>Age</label><input type="number" id="age" value="25"></div>
+<div class="field"><label>Goal</label><select id="goal"><option value="lose">Lose fat</option><option value="maintain">Maintain</option><option value="gain">Build muscle</option></select></div>
+</div><button class="btn" onclick="calculateAll()">✨ Generate My Plan</button></div>
+<div class="card" id="resultsCard" style="display:none;"><h2>Your Targets</h2><div class="results"><div class="stat"><div class="num" id="targetOut">-</div><div class="lab">Daily kcal</div></div><div class="stat"><div class="num" id="proteinG">-</div><div class="lab">Protein g</div></div></div></div>
+</div>
+<div class="panel" id="panel-coach">
+<div class="card"><h2>🤖 Smart Coach</h2>
+<div class="chat-window" id="chatWindow"></div>
+<div class="chat-input-row"><input type="text" id="chatInput" placeholder="Ask your coach..." onkeydown="if(event.key==='Enter'){sendChat();}"><button class="btn secondary" onclick="sendChat()">Send</button></div>
+</div>
+</div>
+<div class="panel" id="panel-log">
+<div class="card"><h2>📒 Food Log</h2><p id="dayTotalCals">0 kcal logged today</p>
+<div class="chat-input-row"><input type="text" id="foodName" placeholder="Food name"><input type="number" id="foodCal" placeholder="Kcal" style="max-width:90px;"><button class="btn secondary" onclick="addFoodItem()">Add</button></div>
+<div id="foodItemsWrap" style="margin-top:12px;"></div>
+</div>
+<div class="card"><h2>💧 Water</h2><div class="water-row" id="waterRow"></div></div>
+</div>
+<div class="panel" id="panel-progress">
+<div class="card"><h2>⚖️ Weight Log</h2><div class="chat-input-row"><input type="number" id="weightLogInput" placeholder="Today's weight"><button class="btn secondary" onclick="addWeightEntry()">Log</button></div><div id="weightLogList" style="margin-top:10px;"></div></div>
+<div class="card"><h2>🏆 Personal Records</h2><div class="chat-input-row"><input type="text" id="prLift" placeholder="Lift (e.g. Squat)"><input type="number" id="prWeight" placeholder="kg" style="max-width:90px;"><button class="btn secondary" onclick="addPR()">Save</button></div><div id="prList" style="margin-top:10px;"></div></div>
 </div>
 <div class="panel" id="panel-leaderboard">
-<div class="card"><h2>Leaderboard</h2><div class="btn secondary" style="width:auto;display:inline-block;" onclick="renderLeaderboard()">Refresh</div> <div class="btn secondary" style="width:auto;display:inline-block;" onclick="unlockAdmin()">Admin</div><div id="leaderboardWrap" style="margin-top:14px;"></div></div>
+<div class="card"><h2>🏆 Leaderboard</h2><p style="color:var(--muted);font-size:.83rem;">Admins can adjust XP or fully reset any player's account below.</p><div style="display:flex;gap:10px;margin-bottom:14px;"><button class="btn secondary" onclick="renderLeaderboard()">🔄 Refresh</button><button class="btn secondary" onclick="unlockAdmin()">🔑 Admin</button></div><div id="leaderboardWrap"></div><div id="adminPanelWrap"></div></div>
 </div>
+<footer>Hit The Gym Lil Bro — accounts sync automatically across devices.</footer>
 </div>
 <div id="profileModalRoot"></div>
 <script>
+let state={};
+const WISDOM=["Skipping leg day is a crime against shorts everywhere.","Protein shake in one hand, excuses in the trash, lil bro.","You miss 100% of the gains you don't chase."];
 function ns(key){ return getActiveProfile()+'__'+key; }
 function getProfiles(){ return JSON.parse(localStorage.getItem('gymapp_profiles')||'["Player 1"]'); }
 function saveProfiles(list){ localStorage.setItem('gymapp_profiles',JSON.stringify(list)); }
@@ -109,66 +139,59 @@ function getCloudPin(name){ return localStorage.getItem(cloudPinKeyFor(name)); }
 let syncTimeout=null;
 function queueCloudSync(){ const name=getActiveProfile(); if(!hasCloudLink(name)) return; clearTimeout(syncTimeout); syncTimeout=setTimeout(function(){ doCloudSync(name); },800); }
 async function doCloudSync(name){ const pin=getCloudPin(name); const prefix=name+'__'; const dataObj={}; Object.keys(localStorage).filter(function(k){ return k.startsWith(prefix); }).forEach(function(k){ dataObj[k]=localStorage.getItem(k); }); await window.fbSavePlayer(name,pin,dataObj); }
-async function reconcileWithCloud(name){
-  try{
-    const player=await window.fbGetPlayer(name);
-    if(!player) return false;
-    const adminActionAt=player.adminActionAt||0;
-    const ackKey='adminack__'+name.toLowerCase();
-    const ack=+(localStorage.getItem(ackKey)||0);
-    if(adminActionAt>ack){
-      const cloudData=player.data||{};
-      const prefix=name+'__';
-      Object.keys(localStorage).filter(function(k){ return k.startsWith(prefix); }).forEach(function(k){ localStorage.removeItem(k); });
-      Object.keys(cloudData).forEach(function(k){ localStorage.setItem(k,cloudData[k]); });
-      localStorage.setItem(ackKey,String(adminActionAt));
-      return true;
-    }
-  }catch(e){ console.error('reconcile failed',e); }
-  return false;
-}
-async function forceSyncNow(){
-  const name=getActiveProfile();
-  const btn=document.getElementById('syncNowBtn');
-  if(!hasCloudLink(name)){ alert('Sign in first to enable cloud sync.'); return; }
-  clearTimeout(syncTimeout);
-  if(btn) btn.textContent='...';
-  try{
-    const changed=await reconcileWithCloud(name);
-    if(changed){ alert('Your account was updated by an admin. Reloading to apply it.'); location.reload(); return; }
-    await doCloudSync(name);
-    if(btn) btn.textContent='OK';
-    setTimeout(function(){ if(btn) btn.textContent='Sync'; },1500);
-    if(document.getElementById('panel-leaderboard').classList.contains('active')){ renderLeaderboard(); }
-  }catch(err){ if(btn) btn.textContent='Sync'; alert('Sync failed: '+err.message); }
-}
+async function reconcileWithCloud(name){ try{ const player=await window.fbGetPlayer(name); if(!player) return false; const adminActionAt=player.adminActionAt||0; const ackKey='adminack__'+name.toLowerCase(); const ack=+(localStorage.getItem(ackKey)||0); if(adminActionAt>ack){ const cloudData=player.data||{}; const prefix=name+'__'; Object.keys(localStorage).filter(function(k){ return k.startsWith(prefix); }).forEach(function(k){ localStorage.removeItem(k); }); Object.keys(cloudData).forEach(function(k){ localStorage.setItem(k,cloudData[k]); }); localStorage.setItem(ackKey,String(adminActionAt)); return true; } }catch(e){ console.error('reconcile failed',e); } return false; }
+async function forceSyncNow(){ const name=getActiveProfile(); const btn=document.getElementById('syncNowBtn'); if(!hasCloudLink(name)){ alert('Sign in first to enable cloud sync.'); return; } clearTimeout(syncTimeout); if(btn) btn.textContent='⏳'; try{ const changed=await reconcileWithCloud(name); if(changed){ alert('Your account was updated by an admin. Reloading to apply it.'); location.reload(); return; } await doCloudSync(name); if(btn) btn.textContent='✅'; setTimeout(function(){ if(btn) btn.textContent='🔄'; },1500); if(document.getElementById('panel-leaderboard').classList.contains('active')){ renderLeaderboard(); } }catch(err){ if(btn) btn.textContent='🔄'; alert('Sync failed: '+err.message); } }
 window.addEventListener('beforeunload', function(){ const name=getActiveProfile(); if(hasCloudLink(name)){ doCloudSync(name); } });
 document.addEventListener('visibilitychange', function(){ const name=getActiveProfile(); if(!hasCloudLink(name)) return; if(document.visibilityState==='hidden'){ doCloudSync(name); } else if(document.visibilityState==='visible'){ reconcileWithCloud(name).then(function(changed){ if(changed) location.reload(); }); } });
 async function cloudSignIn(){ const nameInput=document.getElementById('cloudNameInput'); const pinInput=document.getElementById('cloudPinInput'); const statusEl=document.getElementById('cloudLoginStatus'); const name=nameInput.value.trim(); const pin=pinInput.value.trim(); if(!name||!pin){ statusEl.textContent='Enter both your name and a code.'; return; } statusEl.textContent='Connecting...'; try{ const existing=await window.fbGetPlayer(name); if(existing){ if(existing.pin!==pin){ statusEl.textContent='That name is taken with a different code.'; return; } const cloudData=existing.data||{}; Object.keys(cloudData).forEach(function(k){ localStorage.setItem(k,cloudData[k]); }); statusEl.textContent='Welcome back!'; } else { await window.fbCreatePlayer(name,pin); statusEl.textContent='Account created!'; } localStorage.setItem(cloudPinKeyFor(name),pin); const list=getProfiles(); if(!list.includes(name)){ list.push(name); saveProfiles(list); } setTimeout(function(){ setActiveProfile(name); },500); } catch(err){ statusEl.textContent='Connection error: '+err.message; } }
-function openProfileSwitcher(){ const profiles=getProfiles().filter(function(n){ return hasCloudLink(n); }); const active=getActiveProfile(); const root=document.getElementById('profileModalRoot'); root.innerHTML=''; const box=document.createElement('div'); box.style.position='fixed'; box.style.inset='0'; box.style.background='rgba(0,0,0,.7)'; box.style.display='flex'; box.style.alignItems='center'; box.style.justifyContent='center'; box.innerHTML='<div style="background:#151821;padding:20px;border-radius:14px;max-width:300px;width:90%;"><h3>Sign in</h3><input id="cloudNameInput" placeholder="Your name" style="width:100%;margin-bottom:8px;padding:10px;"><input id="cloudPinInput" type="password" placeholder="Code" style="width:100%;margin-bottom:8px;padding:10px;"><button class="btn" onclick="cloudSignIn()">Go</button><p id="cloudLoginStatus" style="font-size:.75rem;color:#8b94a7;"></p><button class="btn secondary" onclick="document.getElementById(\'profileModalRoot\').innerHTML=\'\'">Close</button></div>'; root.appendChild(box); }
+function openProfileSwitcher(){ const root=document.getElementById('profileModalRoot'); root.innerHTML=''; const overlay=document.createElement('div'); overlay.className='modal-overlay'; overlay.addEventListener('click',function(e){ if(e.target===overlay) root.innerHTML=''; }); const box=document.createElement('div'); box.className='modal-box'; box.innerHTML='<h3>Sign in</h3><input id="cloudNameInput" placeholder="Your name" style="margin-bottom:8px;"><input id="cloudPinInput" type="password" placeholder="Code" style="margin-bottom:8px;"><button class="btn" onclick="cloudSignIn()">Go</button><p id="cloudLoginStatus" style="font-size:.75rem;color:var(--muted);"></p><button class="btn secondary" style="width:100%;margin-top:10px;" onclick="document.getElementById(\'profileModalRoot\').innerHTML=\'\'">Close</button>'; overlay.appendChild(box); root.appendChild(overlay); }
+function toggleTheme(){ const body=document.body; const isDark=body.getAttribute('data-theme')==='dark'; body.setAttribute('data-theme',isDark?'light':'dark'); document.getElementById('themeBtn').textContent=isDark?'☀️':'🌙'; localStorage.setItem('gymapp_theme',isDark?'light':'dark'); }
+(function initTheme(){ const saved=localStorage.getItem('gymapp_theme')||'dark'; document.body.setAttribute('data-theme',saved); document.getElementById('themeBtn').textContent=saved==='dark'?'🌙':'☀️'; })();
 const ADMIN_PASSPHRASE='GymAdmin2026';
 let isAdmin=sessionStorage.getItem('gymapp_admin')==='1';
 function unlockAdmin(){ const pass=prompt('Admin passphrase:'); if(pass===null) return; if(pass===ADMIN_PASSPHRASE){ isAdmin=true; sessionStorage.setItem('gymapp_admin','1'); alert('Admin mode unlocked.'); renderLeaderboard(); } else { alert('Wrong passphrase.'); } }
 async function removePlayer(id,name){ if(!confirm('Remove '+name+'?')) return; try{ await window.fbDeletePlayer(id); renderLeaderboard(); }catch(err){ alert('Failed: '+err.message); } }
 async function adjustXP(id,name,delta){ try{ await window.fbAdjustPlayerXP(id,delta); renderLeaderboard(); }catch(err){ alert('Failed: '+err.message); } }
 async function customAdjustXP(id,name){ const raw=prompt('XP amount (negative to remove):'); if(raw===null) return; const amount=parseInt(raw,10); if(isNaN(amount)){ alert('Enter a valid number.'); return; } adjustXP(id,name,amount); }
-async function resetPlayerLevel(id,name){ if(!confirm('Reset '+name+"'s entire account (XP, streaks, weight log, PRs) to a blank Level 1? This can't be undone and will also apply on their own device.")) return; try{ await window.fbFullResetPlayer(id); renderLeaderboard(); }catch(err){ alert('Failed: '+err.message); } }
+async function resetPlayerLevel(id,name){ if(!confirm('Fully reset '+name+"'s account (XP, logs, everything) to blank Level 1? This can't be undone and applies on their device too.")) return; try{ await window.fbFullResetPlayer(id); renderLeaderboard(); }catch(err){ alert('Failed: '+err.message); } }
 function showTab(name){ document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('active',t.dataset.tab===name); }); document.querySelectorAll('.panel').forEach(function(p){ p.classList.toggle('active',p.id==='panel-'+name); }); if(name==='leaderboard') renderLeaderboard(); }
 function xpFromDataBlob(dataBlob){ const key=Object.keys(dataBlob).find(function(k){ return k.endsWith('__xp'); }); return key?(+dataBlob[key]||0):0; }
-async function renderLeaderboard(){ const wrap=document.getElementById('leaderboardWrap'); wrap.innerHTML='<div class="empty-state">Loading...</div>'; try{ const rows=await window.fbGetLeaderboard(); const active=getActiveProfile(); const list=rows.map(function(r){ const blob=r.data||{}; return { id:r.id, name: blob.displayName||r.id, xp: xpFromDataBlob(blob.data||{}) }; }).sort(function(a,b){ return b.xp-a.xp; }); wrap.innerHTML=''; if(list.length===0){ wrap.innerHTML='<div class="empty-state">No players yet.</div>'; return; } list.forEach(function(p,idx){ const info=levelForXP(p.xp); const row=document.createElement('div'); row.className='leaderboard-row'+(p.name.toLowerCase()===active.toLowerCase()?' me':''); const top=document.createElement('div'); top.className='lb-top'; top.innerHTML='<span>#'+(idx+1)+'</span><span>'+p.name+'</span><span>Lv '+info.level+'</span><span>'+p.xp+' XP</span><span></span>'; row.appendChild(top); if(isAdmin){ const controls=document.createElement('div'); controls.className='lb-admin-controls'; const addBtn=document.createElement('button'); addBtn.className='btn small'; addBtn.textContent='+10 XP'; addBtn.addEventListener('click',function(){ adjustXP(p.id,p.name,10); }); const subBtn=document.createElement('button'); subBtn.className='btn small secondary'; subBtn.textContent='-10 XP'; subBtn.addEventListener('click',function(){ adjustXP(p.id,p.name,-10); }); const customBtn=document.createElement('button'); customBtn.className='btn small secondary'; customBtn.textContent='Custom'; customBtn.addEventListener('click',function(){ customAdjustXP(p.id,p.name); }); const resetBtn=document.createElement('button'); resetBtn.className='btn small secondary'; resetBtn.textContent='Reset'; resetBtn.addEventListener('click',function(){ resetPlayerLevel(p.id,p.name); }); const delBtn=document.createElement('button'); delBtn.className='btn small secondary'; delBtn.textContent='Remove'; delBtn.addEventListener('click',function(){ removePlayer(p.id,p.name); }); controls.appendChild(addBtn); controls.appendChild(subBtn); controls.appendChild(customBtn); controls.appendChild(resetBtn); controls.appendChild(delBtn); row.appendChild(controls); } wrap.appendChild(row); }); } catch(err){ wrap.innerHTML='<div class="errbox">Could not load leaderboard: '+err.message+'</div>'; } }
+async function renderLeaderboard(){ const wrap=document.getElementById('leaderboardWrap'); wrap.innerHTML='<div class="empty-state">Loading...</div>'; try{ const rows=await window.fbGetLeaderboard(); const active=getActiveProfile(); const list=rows.map(function(r){ const blob=r.data||{}; return { id:r.id, name: blob.displayName||r.id, xp: xpFromDataBlob(blob.data||{}) }; }).sort(function(a,b){ return b.xp-a.xp; }); wrap.innerHTML=''; if(list.length===0){ wrap.innerHTML='<div class="empty-state">No players yet.</div>'; return; } list.forEach(function(p,idx){ const info=levelForXP(p.xp); const row=document.createElement('div'); row.className='leaderboard-row'+(p.name.toLowerCase()===active.toLowerCase()?' me':''); const top=document.createElement('div'); top.className='lb-top'; top.innerHTML='<span>#'+(idx+1)+'</span><span>'+p.name+'</span><span>Lv '+info.level+'</span><span>'+p.xp+' XP</span><span></span>'; row.appendChild(top); if(isAdmin){ const controls=document.createElement('div'); controls.className='lb-admin-controls'; const addBtn=document.createElement('button'); addBtn.className='btn small'; addBtn.textContent='+10 XP'; addBtn.addEventListener('click',function(){ adjustXP(p.id,p.name,10); }); const subBtn=document.createElement('button'); subBtn.className='btn small secondary'; subBtn.textContent='-10 XP'; subBtn.addEventListener('click',function(){ adjustXP(p.id,p.name,-10); }); const customBtn=document.createElement('button'); customBtn.className='btn small secondary'; customBtn.textContent='Custom ±'; customBtn.addEventListener('click',function(){ customAdjustXP(p.id,p.name); }); const resetBtn=document.createElement('button'); resetBtn.className='btn small secondary'; resetBtn.textContent='Full Reset'; resetBtn.addEventListener('click',function(){ resetPlayerLevel(p.id,p.name); }); const delBtn=document.createElement('button'); delBtn.className='btn small secondary'; delBtn.textContent='Remove'; delBtn.addEventListener('click',function(){ removePlayer(p.id,p.name); }); controls.appendChild(addBtn); controls.appendChild(subBtn); controls.appendChild(customBtn); controls.appendChild(resetBtn); controls.appendChild(delBtn); row.appendChild(controls); } wrap.appendChild(row); }); } catch(err){ wrap.innerHTML='<div class="errbox">'+err.message+'</div>'; } }
 function getXP(){ return +(localStorage.getItem(ns('xp'))||0); }
-function addXP(amount){ const before=getXP(); const after=before+amount; localStorage.setItem(ns('xp'),after); renderLevelBar(); queueCloudSync(); }
+function addXP(amount){ const after=getXP()+amount; localStorage.setItem(ns('xp'),after); renderLevelBar(); queueCloudSync(); }
 function levelForXP(xp){ const level=Math.min(10,Math.floor(xp/100)+1); const xpIntoLevel=xp%100; return {level,xpIntoLevel}; }
-function renderLevelBar(){ const xp=getXP(); const info=levelForXP(xp); document.getElementById('levelBadgeNum').textContent=info.level; document.getElementById('xpText').textContent=info.xpIntoLevel+' / 100 XP'; document.getElementById('streakBadge').textContent=xp; }
+function renderLevelBar(){ const xp=getXP(); const info=levelForXP(xp); document.getElementById('levelBadgeNum').textContent=info.level; document.getElementById('xpText').textContent=info.xpIntoLevel+' / 100 XP'; document.getElementById('streakBadge').textContent='🔥 '+xp; }
+function calculateAll(){ const weight=+document.getElementById('weight').value; const height=+document.getElementById('height').value; const age=+document.getElementById('age').value; const goal=document.getElementById('goal').value; let bmr=10*weight+6.25*height-5*age+5; let target=goal==='lose'?bmr-500:goal==='gain'?bmr+300:bmr; document.getElementById('targetOut').textContent=Math.round(target); document.getElementById('proteinG').textContent=Math.round(weight*2); document.getElementById('resultsCard').style.display='block'; state.target=Math.round(target); addXP(10); localStorage.setItem(ns('profile'),JSON.stringify({weight,height,age,goal})); renderFoodLog(); }
+function loadMeals(){ try{ return JSON.parse(localStorage.getItem(ns('meals_'+todayKey()))||'[]'); }catch(e){ return []; } }
+function saveMeals(m){ localStorage.setItem(ns('meals_'+todayKey()),JSON.stringify(m)); }
+function todayKey(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+function addFoodItem(){ const name=document.getElementById('foodName').value.trim(); const cal=+document.getElementById('foodCal').value; if(!name||!cal) return; const meals=loadMeals(); meals.push({name,cal}); saveMeals(meals); document.getElementById('foodName').value=''; document.getElementById('foodCal').value=''; renderFoodLog(); addXP(5); }
+function renderFoodLog(){ const meals=loadMeals(); const total=meals.reduce(function(s,m){ return s+m.cal; },0); document.getElementById('dayTotalCals').textContent=total+' kcal logged today'+(state.target?' of '+state.target:''); const wrap=document.getElementById('foodItemsWrap'); wrap.innerHTML=meals.map(function(m){ return '<div style="padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px;">'+m.name+' - '+m.cal+' kcal</div>'; }).join(''); }
+function loadWater(){ return +(localStorage.getItem(ns('water_'+todayKey()))||0); }
+function saveWater(n){ localStorage.setItem(ns('water_'+todayKey()),n); }
+function renderWaterTracker(){ const filled=loadWater(); const row=document.getElementById('waterRow'); row.innerHTML=''; for(let i=0;i<8;i++){ const g=document.createElement('div'); g.className='glass'+(i<filled?' filled':''); g.textContent='💧'; g.addEventListener('click',function(){ saveWater(i+1<=filled?i:i+1); renderWaterTracker(); addXP(2); }); row.appendChild(g); } }
+function loadWeightLog(){ return JSON.parse(localStorage.getItem(ns('weight_log'))||'[]'); }
+function saveWeightLog(a){ localStorage.setItem(ns('weight_log'),JSON.stringify(a)); }
+function addWeightEntry(){ const val=+document.getElementById('weightLogInput').value; if(!val) return; const log=loadWeightLog(); log.push({date:new Date().toISOString().slice(0,10),weight:val}); saveWeightLog(log); document.getElementById('weightLogInput').value=''; renderWeightLog(); addXP(10); }
+function renderWeightLog(){ const log=loadWeightLog(); document.getElementById('weightLogList').innerHTML=log.map(function(w){ return '<div style="padding:6px 0;">'+w.date+': '+w.weight+'kg</div>'; }).join(''); }
+function loadPRs(){ return JSON.parse(localStorage.getItem(ns('prs'))||'{}'); }
+function savePRs(p){ localStorage.setItem(ns('prs'),JSON.stringify(p)); }
+function addPR(){ const lift=document.getElementById('prLift').value.trim(); const w=+document.getElementById('prWeight').value; if(!lift||!w) return; const prs=loadPRs(); prs[lift]=w; savePRs(prs); document.getElementById('prLift').value=''; document.getElementById('prWeight').value=''; renderPRs(); addXP(15); }
+function renderPRs(){ const prs=loadPRs(); document.getElementById('prList').innerHTML=Object.keys(prs).map(function(k){ return '<div style="padding:6px 0;">'+k+': '+prs[k]+'kg</div>'; }).join(''); }
+function appendMsg(text,who){ const win=document.getElementById('chatWindow'); const div=document.createElement('div'); div.className='msg '+who; div.textContent=text; win.appendChild(div); win.scrollTop=win.scrollHeight; }
+function sendChat(){ const input=document.getElementById('chatInput'); const q=input.value.trim(); if(!q) return; input.value=''; appendMsg(q,'user'); setTimeout(function(){ if(/wisdom|joke/i.test(q)){ appendMsg(WISDOM[Math.floor(Math.random()*WISDOM.length)],'bot'); } else if(state.target){ appendMsg('Your daily target is '+state.target+' kcal. Stay consistent!','bot'); } else { appendMsg('Generate your plan on the Profile tab first!','bot'); } },300); }
 (async function initApp(){
   const active=getActiveProfile();
-  document.getElementById('profilePill').textContent=active+(hasCloudLink(active)?' (cloud)':'');
+  document.getElementById('profilePill').textContent='👤 '+active+(hasCloudLink(active)?' ☁️':'');
   if(!hasCloudLink(active)){ setTimeout(openProfileSwitcher,400); }
   if(hasCloudLink(active)){
     const changed=await reconcileWithCloud(active);
     if(changed){ location.reload(); return; }
   }
-  renderLevelBar();
+  renderLevelBar(); renderFoodLog(); renderWaterTracker(); renderWeightLog(); renderPRs();
+  appendMsg('Hi lil bro! Generate your plan on the Profile tab.','bot');
+  const savedProfile=localStorage.getItem(ns('profile'));
+  if(savedProfile){ try{ const p=JSON.parse(savedProfile); document.getElementById('weight').value=p.weight; document.getElementById('height').value=p.height; document.getElementById('age').value=p.age; document.getElementById('goal').value=p.goal; calculateAll(); }catch(e){} }
   if(hasCloudLink(active)){ doCloudSync(active); }
 })();
 </script>
