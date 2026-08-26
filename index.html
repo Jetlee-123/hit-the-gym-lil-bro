@@ -3,76 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hit The Gym Lil Bro — AI Calorie & Exercise Coach</title>
+<title>Hit The Gym Lil Bro</title>
 <style>
-  :root{--bg:#0b0d12;--card:#151821;--card2:#1b1f2a;--border:#262b38;--accent:#22c55e;--accent2:#38bdf8;--accent3:#a78bfa;--accent4:#f472b6;--text:#f1f5f9;--muted:#8b94a7;--danger:#f87171;--radius:16px;--shadow:0 8px 28px rgba(0,0,0,.35);}
-  [data-theme="light"]{--bg:#f4f6fb;--card:#ffffff;--card2:#f0f2f8;--border:#e3e7f0;--text:#1a1d29;--muted:#6b7280;--shadow:0 6px 20px rgba(20,20,40,.08);}
-  *{box-sizing:border-box;}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-  .app{max-width:780px;margin:0 auto;padding:20px 16px 60px;}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:18px;}
-  .btn{display:inline-flex;padding:13px 26px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#08110b;font-weight:700;cursor:pointer;width:100%;justify-content:center;margin-top:10px;}
-  input{width:100%;padding:11px 13px;border-radius:10px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);margin-bottom:8px;}
+body{margin:0;font-family:sans-serif;background:#0b0d12;color:#f1f5f9;padding:40px;text-align:center;}
 </style>
 </head>
-<body data-theme="dark">
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-  const firebaseConfig = {
-    apiKey: "AIzaSyCCwk6PckNFfpBV15vBOafYcvM4n64shnU",
-    authDomain: "food-counter-app-fedc4.firebaseapp.com",
-    projectId: "food-counter-app-fedc4",
-    storageBucket: "food-counter-app-fedc4.firebasestorage.app",
-    messagingSenderId: "969779642326",
-    appId: "1:969779642326:web:1edd42a9bddab7ed74ee77"
-  };
-  const fbApp = initializeApp(firebaseConfig);
-  const fbAuth = getAuth(fbApp);
-  const fbDb = getFirestore(fbApp);
-  window.fbReady = new Promise(function(resolve, reject){
-    let settled = false;
-    const timeout = setTimeout(function(){
-      if(!settled){ settled = true; reject(new Error('Connection timed out. Try reloading, or check your internet connection.')); }
-    }, 8000);
-    signInAnonymously(fbAuth).then(function(cred){
-      if(!settled){ settled = true; clearTimeout(timeout); resolve(cred.user); }
-    }).catch(function(err){
-      if(!settled){ settled = true; clearTimeout(timeout); reject(err); }
-    });
-    onAuthStateChanged(fbAuth, function(user){
-      if(user && !settled){ settled = true; clearTimeout(timeout); resolve(user); }
-    });
-  });
-  window.fbGetPlayer = async function(name){ await window.fbReady; const ref = doc(fbDb, 'players', name.toLowerCase()); const snap = await getDoc(ref); return snap.exists() ? snap.data() : null; };
-  window.fbSavePlayer = async function(name, pin, dataObj){ await window.fbReady; const ref = doc(fbDb, 'players', name.toLowerCase()); await setDoc(ref, { pin: pin, data: dataObj, displayName: name, updatedAt: Date.now() }, { merge: true }); };
-  window.fbCreatePlayer = async function(name, pin){ await window.fbReady; const ref = doc(fbDb, 'players', name.toLowerCase()); await setDoc(ref, { pin: pin, data: {}, displayName: name, createdAt: Date.now() }); };
-  window.fbGetLeaderboard = async function(){ await window.fbReady; const snap = await getDocs(collection(fbDb, 'players')); const rows = []; snap.forEach(function(d){ rows.push({ id: d.id, data: d.data() }); }); return rows; };
-</script>
-<div class="app">
-  <div class="card">
-    <h1>💪 Hit The Gym Lil Bro</h1>
-    <p>Full app is being finalized — sign-in below to test cloud connectivity.</p>
-    <input id="cloudNameInput" placeholder="Your name">
-    <input id="cloudPinInput" type="password" placeholder="Code">
-    <button class="btn" onclick="testSignIn()">Test Sign In</button>
-    <p id="status"></p>
-  </div>
-</div>
-<script>
-async function testSignIn(){
-  const name = document.getElementById('cloudNameInput').value.trim();
-  const pin = document.getElementById('cloudPinInput').value.trim();
-  const statusEl = document.getElementById('status');
-  if(!name || !pin){ statusEl.textContent = 'Enter both fields.'; return; }
-  statusEl.textContent = 'Connecting...';
-  try{
-    const existing = await window.fbGetPlayer(name);
-    if(existing){ statusEl.textContent = existing.pin === pin ? 'Welcome back!' : 'Wrong code for that name.'; }
-    else { await window.fbCreatePlayer(name, pin); statusEl.textContent = 'Account created!'; }
-  } catch(err){ statusEl.textContent = 'Error: ' + err.message; }
-}
-</script>
+<body>
+<h1>Deploying full app...</h1>
 </body>
 </html>
