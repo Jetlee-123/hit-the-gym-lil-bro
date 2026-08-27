@@ -35,19 +35,20 @@ const CHALLENGES = [
 ];
 const MEALS = [
   { key: "breakfast", label: "Breakfast", icon: "🌅", quick: [
-      { name: "Oats (50g)", cal: 190 }, { name: "Eggs (2)", cal: 156 }, { name: "Greek yogurt", cal: 100 },
-      { name: "Banana", cal: 105 }, { name: "Toast + PB", cal: 250 }, { name: "Protein shake", cal: 120 } ] },
+      { name: "Oats (50g)", cal: 190, protein: 7 }, { name: "Eggs (2)", cal: 156, protein: 13 }, { name: "Greek yogurt", cal: 100, protein: 10 },
+      { name: "Banana", cal: 105, protein: 1 }, { name: "Toast + PB", cal: 250, protein: 9 }, { name: "Protein shake", cal: 120, protein: 24 } ] },
   { key: "lunch", label: "Lunch", icon: "🍱", quick: [
-      { name: "Chicken breast (100g)", cal: 165 }, { name: "Rice (1 cup)", cal: 200 }, { name: "Side salad", cal: 80 },
-      { name: "Sandwich", cal: 350 }, { name: "Soup", cal: 180 }, { name: "Wrap", cal: 320 } ] },
+      { name: "Chicken breast (100g)", cal: 165, protein: 31 }, { name: "Rice (1 cup)", cal: 200, protein: 4 }, { name: "Side salad", cal: 80, protein: 2 },
+      { name: "Sandwich", cal: 350, protein: 15 }, { name: "Soup", cal: 180, protein: 8 }, { name: "Wrap", cal: 320, protein: 14 } ] },
   { key: "dinner", label: "Dinner", icon: "🍽️", quick: [
-      { name: "Salmon (150g)", cal: 280 }, { name: "Steak (150g)", cal: 340 }, { name: "Pasta (1 cup)", cal: 220 },
-      { name: "Mixed veg", cal: 70 }, { name: "Sweet potato", cal: 180 }, { name: "Stir fry", cal: 300 } ] },
+      { name: "Salmon (150g)", cal: 280, protein: 34 }, { name: "Steak (150g)", cal: 340, protein: 38 }, { name: "Pasta (1 cup)", cal: 220, protein: 8 },
+      { name: "Mixed veg", cal: 70, protein: 3 }, { name: "Sweet potato", cal: 180, protein: 3 }, { name: "Stir fry", cal: 300, protein: 18 } ] },
   { key: "snacks", label: "Snacks", icon: "🍎", quick: [
-      { name: "Protein bar", cal: 200 }, { name: "Mixed nuts (30g)", cal: 180 }, { name: "Apple", cal: 95 },
-      { name: "Peanut butter (1 tbsp)", cal: 95 }, { name: "Rice cakes (2)", cal: 70 }, { name: "Yogurt", cal: 100 } ] }
+      { name: "Protein bar", cal: 200, protein: 20 }, { name: "Mixed nuts (30g)", cal: 180, protein: 6 }, { name: "Apple", cal: 95, protein: 0 },
+      { name: "Peanut butter (1 tbsp)", cal: 95, protein: 4 }, { name: "Rice cakes (2)", cal: 70, protein: 1 }, { name: "Yogurt", cal: 100, protein: 10 } ] }
 ];
 
+/* ---------------- MULTI-PROFILE + CLOUD ---------------- */
 function ns(key){ return getActiveProfile() + "-" + key; }
 function getProfiles(){ return JSON.parse(localStorage.getItem("gymapp-profiles") || "[\"Player 1\"]"); }
 function saveProfiles(list){ localStorage.setItem("gymapp-profiles", JSON.stringify(list)); }
@@ -275,6 +276,7 @@ function setSeg(segId, hiddenId, btn){
   document.getElementById(hiddenId).value = btn.dataset.val;
 }
 
+/* ---------------- LEADERBOARD ---------------- */
 function xpFromDataBlob(dataBlob){
   const key = Object.keys(dataBlob).find(function(k){ return k.endsWith("-xp"); });
   return key ? (Number(dataBlob[key]) || 0) : 0;
@@ -321,6 +323,7 @@ async function renderLeaderboard(){
   } catch(err){ wrap.innerHTML = "<div class='errbox'>Could not load leaderboard: " + err.message + "</div>"; }
 }
 
+/* ---------------- XP / LEVEL SYSTEM ---------------- */
 const LEVELTITLES = ["Rookie","Getting Started","Consistent","Committed","Iron Apprentice","Gym Regular","Strong Contender","Beast Mode","Iron Veteran","Iron Beast"];
 function getXP(){ return Number(localStorage.getItem(ns("xp"))) || 0; }
 function addXP(amount, reason){
@@ -363,15 +366,79 @@ function fireConfetti(){
   }
 }
 
+/* ---------------- DAILY CHALLENGE (AUTO-DETECTED) ----------------
+   These no longer require a manual "Mark complete" click. Each challenge
+   condition is derived from real data you already generate by using the
+   app (food log, water tracker, workout checkboxes), and is re-evaluated
+   every time that data changes. The card just displays live progress.
+------------------------------------------------------------ */
 function todaysChallenge(){
   const dayIndex = Math.floor(Date.now()/86400000) % CHALLENGES.length;
   return CHALLENGES[dayIndex];
+}
+function dailyProteinTotal(dateKey){
+  const raw = localStorage.getItem(ns("meals-" + dateKey));
+  if (!raw) return 0;
+  let meals; try{ meals = JSON.parse(raw); }catch(e){ return 0; }
+  return [].concat(meals.breakfast||[], meals.lunch||[], meals.dinner||[], meals.snacks||[])
+    .reduce(function(s,it){ return s + (it.protein || 0); }, 0);
+}
+function proteinHitDaysThisWeek(){
+  if (!state.proteinG) return 0;
+  let hits = 0;
+  for (let i=0;i<7;i++){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const key = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+    if (dailyProteinTotal(key) >= state.proteinG) hits++;
+  }
+  return hits;
+}
+function challengeStatus(ch){
+  const meals = loadTodayMeals();
+  if (ch.id === "logall"){
+    const count = ["breakfast","lunch","dinner"].filter(function(k){ return (meals[k]||[]).length > 0; }).length;
+    return { met: count >= 3, progressText: count + "/3 main meals logged today" };
+  }
+  if (ch.id === "water8"){
+    const filled = loadWater();
+    return { met: filled >= 8, progressText: filled + "/8 glasses filled today" };
+  }
+  if (ch.id === "notrain"){
+    const todayKey = new Date().toDateString();
+    const done = loadWorkoutDays().includes(todayKey);
+    return { met: done, progressText: done ? "Today's workout logged" : "No workout logged yet today" };
+  }
+  if (ch.id === "earlylog"){
+    const bfast = meals.breakfast || [];
+    const early = bfast.some(function(it){ return it.loggedAt && new Date(it.loggedAt).getHours() < 10; });
+    return { met: early, progressText: early ? "Breakfast logged before 10am" : (bfast.length ? "Breakfast logged, but not before 10am" : "No breakfast logged yet") };
+  }
+  if (ch.id === "protein3"){
+    if (!state.proteinG) return { met: false, progressText: "Generate your plan first to track protein targets" };
+    const hits = proteinHitDaysThisWeek();
+    return { met: hits >= 3, progressText: hits + "/3 days this week you hit " + state.proteinG + "g protein" };
+  }
+  return { met: false, progressText: "" };
+}
+function checkChallengeAutoComplete(){
+  const ch = todaysChallenge();
+  const todayKey = new Date().toDateString();
+  const doneKey = ns("challengedone-" + todayKey);
+  if (localStorage.getItem(doneKey) === "1") return;
+  const status = challengeStatus(ch);
+  if (status.met){
+    localStorage.setItem(doneKey, "1");
+    addXP(ch.xp, ch.title);
+    fireConfetti();
+    renderChallengeCard();
+  }
 }
 function renderChallengeCard(){
   const ch = todaysChallenge();
   const todayKey = new Date().toDateString();
   const doneKey = ns("challengedone-" + todayKey);
   const done = localStorage.getItem(doneKey) === "1";
+  const status = challengeStatus(ch);
   const box = document.getElementById("challengeCard");
   box.innerHTML = "";
   const titleDiv = document.createElement("div"); titleDiv.className = "ch-title";
@@ -380,18 +447,15 @@ function renderChallengeCard(){
   const xpDiv = document.createElement("div"); xpDiv.className = "ch-xp";
   xpDiv.textContent = done ? ("Completed! +" + ch.xp + " XP earned") : ("+" + ch.xp + " XP if completed");
   box.appendChild(titleDiv); box.appendChild(descDiv); box.appendChild(xpDiv);
-  if (!done){
-    const btn = document.createElement("button");
-    btn.className = "btn small"; btn.style.marginTop = "10px"; btn.textContent = "Mark complete";
-    btn.addEventListener("click", function(){
-      localStorage.setItem(doneKey, "1");
-      addXP(ch.xp, ch.title);
-      renderChallengeCard();
-    });
-    box.appendChild(btn);
+  if (!done && status.progressText){
+    const progressDiv = document.createElement("div");
+    progressDiv.className = "small"; progressDiv.style.marginTop = "6px";
+    progressDiv.textContent = "Auto-tracked: " + status.progressText;
+    box.appendChild(progressDiv);
   }
 }
 
+/* ---------------- REST TIMER ---------------- */
 let timerSeconds = 90, timerInterval = null, timerRemaining = 90;
 function setTimer(sec){ timerSeconds = sec; timerRemaining = sec; clearInterval(timerInterval); timerInterval = null; updateTimerDisplay(); }
 function updateTimerDisplay(){
@@ -636,6 +700,7 @@ function buildPlan(goal, exp, days, location){
         localStorage.setItem(doneKey, "1");
         if (!workoutDays.includes(todayKey)){ workoutDays.push(todayKey); saveWorkoutDays(workoutDays); }
         addXP(20, "Workout complete: " + d.day);
+        checkChallengeAutoComplete();
       } else { localStorage.removeItem(doneKey); }
       buildPlan(goal, exp, days, location);
     });
@@ -711,8 +776,10 @@ function renderMealCards(){
       const chip = document.createElement("div"); chip.className = "food-chip";
       chip.textContent = q.name + " (" + q.cal + ")";
       chip.addEventListener("click", function(){
-        items.push({ name: q.name, cal: q.cal }); meals[m.key] = items; saveTodayMeals(meals); renderMealCards();
+        items.push({ name: q.name, cal: q.cal, protein: q.protein || 0, loggedAt: Date.now() });
+        meals[m.key] = items; saveTodayMeals(meals); renderMealCards();
         addXP(2, "Logged " + q.name);
+        checkChallengeAutoComplete();
       });
       chipsWrap.appendChild(chip);
     });
@@ -724,8 +791,10 @@ function renderMealCards(){
     addBtn.addEventListener("click", function(){
       const nm = nameInput.value.trim(); const cl = Number(calInput.value);
       if (!nm || !cl) return;
-      items.push({ name: nm, cal: cl }); meals[m.key] = items; saveTodayMeals(meals); renderMealCards();
+      items.push({ name: nm, cal: cl, protein: 0, loggedAt: Date.now() });
+      meals[m.key] = items; saveTodayMeals(meals); renderMealCards();
       addXP(2, "Logged " + nm);
+      checkChallengeAutoComplete();
     });
     addRow.appendChild(nameInput); addRow.appendChild(calInput); addRow.appendChild(addBtn);
     body.appendChild(addRow);
@@ -736,6 +805,7 @@ function renderMealCards(){
   const target = state.target || Number(document.getElementById("dayTotalTarget").textContent) || 2000;
   document.getElementById("dayTotalTarget").textContent = target;
   document.getElementById("logBar").style.width = Math.min(100, (dayTotal/target*100)) + "%";
+  renderChallengeCard();
 }
 
 function todayWaterKey(){ return ns("water-" + todayKeyForMeals()); }
@@ -756,6 +826,7 @@ function renderWaterTracker(){
       queueCloudSync();
       renderWaterTracker();
       if (newVal === total) addXP(10, "Hydration goal hit");
+      checkChallengeAutoComplete();
     });
     row.appendChild(g);
   }
@@ -924,6 +995,7 @@ window.addEventListener("DOMContentLoaded", async function(){
   loadState();
   renderLevelBar();
   renderChallengeCard();
+  checkChallengeAutoComplete();
   setTimer(90);
   renderPRs();
   renderWaterTracker();
